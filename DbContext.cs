@@ -32,26 +32,6 @@ public class DbContext
         );
     }
 
-    public IEnumerable<Product> GetProductsInStock()
-    {
-        using var db = new SqliteConnection(_connectionString);
-        return db.Query<Product>(
-            """
-            SELECT 
-                id AS Id,
-                name AS Name,
-                unit_of_measure AS UnitOfMeasure,
-                price AS Price,
-                quantity AS Quantity,
-                created_at AS CreatedAt,
-                updated_at AS UpdatedAt
-            FROM table_products 
-            WHERE quantity > 0 
-            ORDER BY id
-            """
-        );
-    }
-
     public Product? GetProductById(int id)
     {
         using var db = new SqliteConnection(_connectionString);
