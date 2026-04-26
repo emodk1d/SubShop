@@ -12,12 +12,11 @@ public class DbContext
         _connectionString = connectionString;
     }
 
-    public void GetAllProducts()
+    public IEnumerable<Product> GetAllProducts()
     {
         using var db = new SqliteConnection(_connectionString);
-        db.Open();
 
-        db.Query<Product>(
+        return db.Query<Product>(
             """
             SELECT 
             id AS Id,
@@ -75,24 +74,21 @@ public class DbContext
     public bool SellProduct(int productId, int quantityToSell)
     {
         using var db = new SqliteConnection(_connectionString);
+        db.Open();
 
-        var product = db.QueryFirstOrDefault<Product>(
+        var oldQuantity = db.ExecuteScalar<decimal>(
             """
-            SELECT 
-                id AS Id,
-                name AS Name,
-                unit_of_measure AS UnitOfMeasure,
-                price AS Price,
-                quantity AS Quantity,
-                created_at AS CreatedAt,
-                updated_at AS UpdatedAt
-            FROM main.table_products
+            SELECT quantity 
+            FROM table_products 
             WHERE id = @Id
             """,
             new { Id = productId });
 
-        if (product == null) return false;
-        if (quantityToSell > product.Quantity) return false;
+        if (oldQuantity == 0)
+            return false;
+
+        if (quantityToSell > oldQuantity)
+            return false;
 
         db.Execute(
             """
@@ -102,7 +98,16 @@ public class DbContext
             """,
             new { Quantity = quantityToSell, Id = productId });
 
-        var totalAmount = quantityToSell * product.Price;
+        var newQuantity = db.ExecuteScalar<decimal>(
+            """
+            SELECT quantity 
+            FROM table_products 
+            WHERE id = @Id
+            """,
+            new { Id = productId });
+
+        var product = GetProductById(productId);
+        var totalAmount = quantityToSell * product!.Price;
 
         db.Execute(
             """
@@ -116,9 +121,7 @@ public class DbContext
                 Price = product.Price,
                 TotalAmount = totalAmount
             });
-        
-        var remainingQuantity = product.Quantity - quantityToSell;
-        
-        return remainingQuantity != product.Quantity;
+
+        return newQuantity != oldQuantity;
     }
 }
