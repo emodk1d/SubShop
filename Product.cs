@@ -9,5 +9,4 @@ public record class Product
     public int Quantity { get; init; }
     public required string CreatedAt { get; init; }
     public required string UpdatedAt { get; init; }
-    
 }
