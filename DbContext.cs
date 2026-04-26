@@ -98,7 +98,7 @@ public class DbContext
             """,
             new { Quantity = quantityToSell, Id = productId });
 
-        var newQuantity = db.ExecuteScalar<decimal>(
+        var newQuantity = db.ExecuteScalar<int>(
             """
             SELECT quantity 
             FROM table_products 
