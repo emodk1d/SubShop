@@ -2,12 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubShop", "SubShop.csproj", "{AE49B345-DA32-46E2-AF9F-43E4950A75E8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "databse", "databse", "{8AB6F191-971E-47DE-A32B-75E07268EBAE}"
-	ProjectSection(SolutionItems) = preProject
-		shop.db = shop.db
-		create_db.sql = create_db.sql
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
