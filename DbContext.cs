@@ -56,7 +56,7 @@ public class DbContext
         using var db = new SqliteConnection(_connectionString);
         db.Open();
 
-        var oldQuantity = db.ExecuteScalar<decimal>(
+        var oldQuantity = db.ExecuteScalar<int>(
             """
             SELECT quantity 
             FROM table_products 
